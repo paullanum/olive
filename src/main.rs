@@ -20,7 +20,7 @@ use tui::{
     Terminal,
 };
 
-/// A text editor that does its best to not edit any text
+/// A text editor trying its hardest to not edit text
 #[derive(Parser)]
 struct Opts {
     // TODO: Make this optional, open to a blank screen(?)
