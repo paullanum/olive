@@ -15,7 +15,7 @@ Olive is currently pre-pre-alpha.
 Nearly nothing works at the moment and it has no real function other than being a significantly worse (and limited) cat clone.
 It is currently being developed alone for fun and education.
 
-## :comapss: Roadmap
+## :compass: Roadmap
 
 While Olive has no concrete plans, there are some ideas for the path ahead:
 
