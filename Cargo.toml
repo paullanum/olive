@@ -1,0 +1,14 @@
+[package]
+name = "olive"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = {version = "4.0.27", features = ["help", "std", "suggestions", "derive", "usage"]}
+crossterm = {version = "0.25.0", features = ["event-stream"]}
+futures = "0.3.25"
+tokio = { version = "1.23.0", features = ["macros", "rt-multi-thread"] }
+tui = "0.19.0"
+unicode-width = "0.1.10"
