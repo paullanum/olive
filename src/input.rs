@@ -28,15 +28,12 @@ impl KeyMap {
 
     /// Process `event` given the current keymappings
     fn event(&self, event: KeyEvent) -> EditorCommand {
-        if let KeyEvent {
-            code: KeyCode::Char(c),
-            ..
-        } = event
-        {
-            self.map.get(&c).cloned().unwrap_or(EditorCommand::Continue)
-        } else {
-            // TODO: Make this handle non-alpha keys
-            EditorCommand::Continue
+        match event {
+            KeyEvent {
+                code: KeyCode::Char(c),
+                ..
+            } => self.map.get(&c).cloned().unwrap_or(EditorCommand::Continue),
+            _ => EditorCommand::Continue,
         }
     }
 }
