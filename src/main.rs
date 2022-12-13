@@ -1,5 +1,5 @@
-mod input;
 mod commands;
+mod input;
 
 use std::{
     fs,
