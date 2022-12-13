@@ -8,11 +8,14 @@ use futures::{select, FutureExt, StreamExt};
 
 use crate::commands::EditorCommand;
 
-// TODO: Make this a trait to handle events
 // TODO: Take a `KeyEvent` object as map key
 /// Manage key bindings
 struct KeyMap {
     map: HashMap<char, EditorCommand>,
+}
+
+trait Mapping {
+    fn event(&self, event: KeyEvent) -> EditorCommand;
 }
 
 impl KeyMap {
@@ -25,7 +28,9 @@ impl KeyMap {
             ]),
         }
     }
+}
 
+impl Mapping for KeyMap {
     /// Process `event` given the current keymappings
     fn event(&self, event: KeyEvent) -> EditorCommand {
         match event {
