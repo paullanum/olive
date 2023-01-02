@@ -2,6 +2,7 @@ mod commands;
 mod input;
 
 use std::{
+    error::Error,
     fs,
     io::{self, BufRead},
     path::PathBuf,
@@ -11,8 +12,8 @@ use clap::Parser;
 use crossterm::{
     event::{DisableMouseCapture, EnableMouseCapture},
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
-    Result,
 };
+use futures::{channel::mpsc::unbounded, future::select, pin_mut};
 use tui::{
     backend::CrosstermBackend,
     text::{Span, Spans, Text},
@@ -33,7 +34,7 @@ trait Filter {
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), Box<dyn Error>> {
     let cli = Opts::parse();
 
     let stdout = io::stdout();
@@ -47,14 +48,13 @@ async fn main() -> Result<()> {
         if open_file.exists() {
             let file = fs::File::open(&open_file)?;
 
-            let title = format!(
-                "{}",
-                &open_file
-                    .file_name()
-                    .unwrap_or_default()
-                    .to_str()
-                    .unwrap_or_default()
-            );
+            let title = open_file
+                .file_name()
+                .unwrap_or_default()
+                .to_str()
+                .unwrap_or_default()
+                .to_string();
+
             let buffer = Text {
                 lines: io::BufReader::new(file)
                     .lines()
@@ -68,7 +68,13 @@ async fn main() -> Result<()> {
             dbg!("ERROR NO FILE");
         }
     }
-    input::handle_input().await?;
+    let (tx, rx) = unbounded();
+    let input_handler = input::InputHandler::new(tx);
+    let input_handle = input_handler.handle();
+    let command_handler = commands::CommandHandler::new(rx).handle();
+    pin_mut!(input_handle);
+    pin_mut!(command_handler);
+    select(input_handle, command_handler).await;
 
     disable_raw_mode()?;
     crossterm::execute!(
