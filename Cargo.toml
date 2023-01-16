@@ -9,6 +9,7 @@ edition = "2021"
 clap = {version = "4.0.27", features = ["help", "std", "suggestions", "derive", "usage"]}
 crossterm = {version = "0.25.0", features = ["event-stream"]}
 futures = "0.3.25"
+thiserror = "1.0.38"
 tokio = { version = "1.23.0", features = ["macros", "rt-multi-thread"] }
 tui = "0.19.0"
 unicode-width = "0.1.10"
